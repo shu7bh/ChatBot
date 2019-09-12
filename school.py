@@ -1,6 +1,7 @@
 import sys
 import pandas as pd
 import string
+import StudentDetails as SD
 
 readfaq = pd.read_excel('school.xlsx', sheet_name = 'FAQ')
 
@@ -25,6 +26,7 @@ def inCquestion(q):
     return False
 
 def inFAQ(q):
+    global res
     for i in range(len(question)):
         if question[i] in q:
             res = response[i]
@@ -37,10 +39,19 @@ def  Chatbot():
     while True:
         print()
         uinput = input("You: ").lower().translate(str.maketrans('', '', string.punctuation))
-        
+
+        if res == "Please enter your admission number":
+            if uinput.isdigit():
+                if(SD.showdetails(int(uinput))):
+                    res = ' '
+                continue
+            else:
+                print("Bot: Wrong admission number. Please enter again.")
+                continue
+            
         if  any(phrase in uinput for phrase in ending):
             return
-
+            
         if  inCquestion(uinput):
             continue
 
@@ -77,3 +88,4 @@ def  Chatbot():
 print ("\nBot: Hi, my name is Mark and I'm here to assist you?")
 Chatbot()
 print ("Bot: Bye, talk to you later. Hope I could help you out")
+    
