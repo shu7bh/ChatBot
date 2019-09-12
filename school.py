@@ -15,43 +15,65 @@ ending = readconversation['Ending'].tolist()
 cquestion = readconversation['Question'].tolist()
 canswer = readconversation['Answer'].tolist()
 
-res = "Hi"
+res = "Hi,"
 
+def inCquestion(q):
+    for i in range(len(cquestion)):
+        if str(cquestion[i]) in q:
+            print ("Bot: " + canswer[i])
+            return True
+    return False
+
+def inFAQ(q):
+    for i in range(len(question)):
+        if question[i] in q:
+            res = response[i]
+            print ("Bot: " + res)
+            return True
+    return False
+                
 def  Chatbot():
+    global res
     while True:
+        print()
         uinput = input("You: ").lower().translate(str.maketrans('', '', string.punctuation))
-
+        
         if  any(phrase in uinput for phrase in ending):
             return
 
-        elif any(phrase in uinput for phrase in praising):
-            res = "Thanks a lot, always happy to help"
+        if  inCquestion(uinput):
+            continue
 
-        elif any(phrase in uinput for phrase in greeting):
-            if res == "Hi":
+        if inFAQ(uinput):
+            continue
+
+        if "hi" in uinput:
+            if "Hi," in res:
                 res = "How may I help you?"
             else:
                 res = "Hi, how may I assist you?"
+            print ("Bot: "+ res)
+            continue
+        
+        if any(phrase in uinput for phrase in greeting):          
+            if "Hi," in res:
+                res = "How may I help you?"
+            else:
+                res = "Hi, how may I assist you?"
+            print ("Bot: "+ res)
+            continue
+            
+        if any(phrase in uinput for phrase in praising):
+            res = "Thanks a lot, always happy to help"
+            print ("Bot: "+ res)
+            continue
 
-        elif any(phrase in uinput for phrase in cquestion):
-            for i in range (len(cquestion)):
-                if cquestion[i] in uinput:
-                    res = canswer[i]
-                    break
-        else:
-            for i in range(len(question)):
-                if question[i] in uinput:
-                    res = response[i]
-                    break
-                elif i == len(question) - 1:
-                    res = "Sorry couldn't able to get that, contact the reception for info regarding that"
-                    file = open("questions.txt", 'a')
-                    file.write(uinput + '\n')
-                    file.close()
-                    
-        print ("Bot: " + res, end = "\n\n")
+        file = open("questions.txt", 'a')
+        file.write(uinput + '\n')
+        file.close()
+        print( "Bot: Sorry couldn't able to get that, contact the reception for info regarding that")
+        #print ("Bot: " + res, end = "\n\n")
 
-print ("Bot: Hi my name is Mark and I'm here to assist you?", end = "\n\n")
+print ("\nBot: Hi, my name is Mark and I'm here to assist you?")
 Chatbot()
 print ("Bot: Bye, talk to you later. Hope I could help you out")
-    
